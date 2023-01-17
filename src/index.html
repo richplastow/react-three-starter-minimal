@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="data:image/svg+xml,<svg
+    xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text
+    y=%22.9em%22 font-size=%2290%22>🎊</text></svg>">
+  <title>react-three-starter-minimal</title>
+  <style>
+    body { background:#111; color:#ccc; font:20px/1.5 Arial }
+    canvas { position:fixed; top:0; left:0; z-index:-1 }
+  </style>
+</head>
+<body>
+  <h1>react-three-starter-minimal</h1>
+  <canvas></canvas>
+  <main id="root"></main>
+  <script>window.process = { env:{ production:true } }</script>
+  <script type="module">
+    import { extend, createRoot, events, React, THREE, useFrame }
+      from './lib/react-three-fiber.js';
+    const { createElement:h, useRef, useState } = React;
+    extend(THREE); // register the THREE namespace as elements
+      
+    // Configure the root, inject events optionally, set camera, etc.
+    const root = createRoot(document.querySelector('canvas'));
+    root.configure({ events, camera: { position:[0,0,-10] } });
+
+    // `createRoot` is not responsive, so handle resize here.
+    window.addEventListener('resize', () => root.configure({
+      size: { width: window.innerWidth, height: window.innerHeight } }));
+    window.dispatchEvent(new Event('resize')); // trigger resize
+
+    // Define the Box component.
+    function Box(props) {
+      const mesh = useRef(); // direct access to the mesh
+      const [ hovered, setHover ] = useState(false); // set up hovered state
+      const [ active, setActive ] = useState(false); // set up active state
+
+      // Subscribe Box to the render-loop, and rotate the mesh every frame.
+      useFrame((state, delta) => (mesh.current.rotation.x += delta));
+
+      // Return the view - regular ThreeJS elements built by createElement().
+      return (
+        h('mesh', {
+          ...props,
+          ref: mesh,
+          scale: active ? 1.5 : 1,
+          onClick: event => setActive(!active),
+          onPointerOver: event => setHover(true),
+          onPointerOut: event => setHover(false),
+        }, [
+          h('boxGeometry', { key:'bg', args:[1,1,1] }),
+          h('meshStandardMaterial', {
+            key:'msm', color:hovered ? 'hotpink' : 'orange' }),
+      ]));
+    }
+
+    root.render([ // start rendering the scene
+      h('ambientLight', { key:'al' }),
+      h('pointLight', { key:'pl', position:[10,10,10] }),
+      h(Box, { key:'b0', position:[-1.2,0,0] }),
+      h(Box, { key:'b1', position:[1.2,0,0] }),
+    ]);
+    // root.unmount(); // unmount and dispose of memory
+  </script>
+</body>
+</html>
