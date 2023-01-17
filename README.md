@@ -11,7 +11,7 @@ A simple template for reactive 3D web apps
 1. At GitHub, click the ‘+’ icon, and ‘New repository’
 2. Name it, describe it, tick ‘Add a README file’, choose MIT license
 3. Click ‘Create repository’
-4. Click the ‘Code’ button, ‘Local’ tab, ‘SHH’, and the copy icon
+4. Click the ‘Code’ button, ‘Local’ tab, ‘SSH’, and the copy icon
 5. In your Terminal, `cd` to wherever you work
 6. `git clone ` and paste something like ‘git@github.com:kim/my-app.git’
 7. `cd` into the new directory, eg `cd my-app`
@@ -71,7 +71,7 @@ This will let Rollup make sense of a path like 'react'.
 24.0.0 adds 14 packages, 609 kB, 95 items.  
 This will let Rollup import packages which use `require('...')`.  
 
-Create the __rollup-rtf.config.js__ file:  
+Create the __rollup-dev-bundles.config.js__ file:  
 
 ```js
 // Configuration used by Rollup during `npm run build:dev-bundles`.
@@ -91,7 +91,7 @@ export default [
 ```
 
 Add this to the `"scripts"` object in the __package.json__ file:  
-`"build:dev-bundles": "rollup -c rollup-rtf.config.js",`
+`"build:dev-bundles": "rollup -c rollup-dev-bundles.config.js",`
 
 Run the Rollup build:  
 `npm run build:dev-bundles`
