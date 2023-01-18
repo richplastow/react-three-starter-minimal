@@ -61,15 +61,21 @@ We can use Rollup to concatenate all the imports into a single file, which your
 development browser can import. [Vite calls this approach ‘dependency pre-bundling’.](
 https://vitejs.dev/guide/dep-pre-bundling.html#dev-bundles)
 
-Install Rollup, along with plugin-node-resolve and plugin-commonjs, as dev dependencies.  
+Install Rollup, along with some plugins, as dev dependencies.  
 `npm i rollup -D`  
-3.10.0 adds 2 packages, 2.5 MB, 29 items.  
+3.10.0 adds 2 packages, 2.5 MB, 29 items.
+
 `npm i @rollup/plugin-node-resolve -D`  
 15.0.1 adds 6 packages, 554 kB, 280 items.  
-This will let Rollup make sense of a path like 'react'.  
+This will let Rollup make sense of a path like 'react'.
+
 `npm i @rollup/plugin-commonjs -D`  
 24.0.0 adds 14 packages, 609 kB, 95 items.  
-This will let Rollup import packages which use `require('...')`.  
+This will let Rollup import packages which use `require('...')`.
+
+`npm i @rollup/plugin-terser -D`  
+0.3.0 adds 16 packages, 3.6 MB, 143 items.  
+Minifies JavaScipt bundles.
 
 Create the __rollup-dev-bundles.config.js__ file:  
 
@@ -77,15 +83,16 @@ Create the __rollup-dev-bundles.config.js__ file:
 // Configuration used by Rollup during `npm run build:dev-bundles`.
 import commonjs from '@rollup/plugin-commonjs';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
+import terser from '@rollup/plugin-terser';
 export default [
    {
       input: `@react-three/fiber`,
       output: {
-         file: `src/lib/react-three-fiber.js`,
+         file: `src/lib/react-three-fiber.min.js`,
          format: 'es',
          outro: 'const React = react.exports; export { React, THREE };',
       },
-      plugins: [ commonjs(), nodeResolve() ],
+      plugins: [ commonjs(), nodeResolve(), terser() ],
    },
 ];
 ```
@@ -130,7 +137,7 @@ Create the __src/index.html__ file:
   <script>window.process = { env:{ production:true } }</script>
   <script type="module">
     import { extend, createRoot, events, React, THREE, useFrame }
-      from './lib/react-three-fiber.js';
+      from './lib/react-three-fiber.min.js';
     const { createElement:h, useRef, useState } = React;
     extend(THREE); // register the THREE namespace as elements
       
