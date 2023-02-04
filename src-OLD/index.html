@@ -10,10 +10,13 @@
   <title>react-three-starter-minimal</title>
   <style>
     body { background:#111; color:#ccc; font:20px/1.5 Arial }
+    canvas { position:fixed; top:0; left:0; z-index:-1 }
   </style>
 </head>
 <body>
-  <h1>Loading...</h1>
+  <h1>react-three-starter-minimal</h1>
+  <canvas></canvas>
+  <script>window.process = { env:{ production:true } }</script>
   <script src="main.js" type="module"></script>
 </body>
 </html>
